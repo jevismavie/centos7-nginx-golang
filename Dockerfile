@@ -1,6 +1,11 @@
 FROM centos:7.3.1611
 
-ENV SRCDIR /root/go/src
+# Args
+ARG entrypoint="tail -f /dev/null"
+ARG goversion="1.7.4"
+ENV GO_BINARY go${goversion}.linux-amd64.tar.gz
+ARG repos="github.com"
+ENV SRCDIR /root/go/src/${repos}
 
 # Install systemd
 RUN \
@@ -58,7 +63,6 @@ RUN mkdir -p /root/tmp
 
 # Install golang
 ENV TMPDIR /root/tmp
-ENV GO_BINARY go1.7.4.linux-amd64.tar.gz
 RUN \
   curl -fLo ${TMPDIR}/${GO_BINARY} --create-dirs https://storage.googleapis.com/golang/${GO_BINARY}
 WORKDIR ${TMPDIR}
@@ -167,6 +171,6 @@ RUN ln -s /usr/lib/systemd/system/nginx.service /etc/systemd/system/multi-user.t
 
 WORKDIR ${SRCDIR}
 
-CMD tail -f /dev/null
+ENTRYPOINT ${entrypoint}
 
 EXPOSE 80
