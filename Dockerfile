@@ -1,7 +1,6 @@
 FROM centos:7.3.1611
 
 ENV SRCDIR /root/go/src
-WORKDIR ${SRCDIR}
 
 # Install systemd
 RUN \
@@ -62,11 +61,11 @@ ENV TMPDIR /root/tmp
 ENV GO_BINARY go1.7.4.linux-amd64.tar.gz
 RUN \
   curl -fLo ${TMPDIR}/${GO_BINARY} --create-dirs https://storage.googleapis.com/golang/${GO_BINARY}
-#COPY tmp/go1.7.4.linux-amd64.tar.gz /root/tmp/go1.7.4.linux-amd64.tar.gz
 WORKDIR ${TMPDIR}
 RUN \
-  tar -C /usr/local -zxvf go1.7.4.linux-amd64.tar.gz \
-  && chmod -R 777 /usr/local/go ;
+  tar -C /usr/local -zxvf ${GO_BINARY} \
+  && chmod -R 777 /usr/local/go \
+  && rm -f ${GO_BINARY}
 
 # Install glide
 ENV GOROOT /usr/local/go
@@ -165,6 +164,8 @@ RUN echo "Welcome to nginx!" > /usr/share/nginx/html/index.html
 # Enable to service nginx
 RUN rm -f /etc/systemd/system/multi-user.target.wants/nginx.service
 RUN ln -s /usr/lib/systemd/system/nginx.service /etc/systemd/system/multi-user.target.wants/nginx.service
+
+WORKDIR ${SRCDIR}
 
 CMD tail -f /dev/null
 
