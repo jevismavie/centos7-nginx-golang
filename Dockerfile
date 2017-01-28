@@ -1,7 +1,6 @@
 FROM centos:7.3.1611
 
-# Args
-ARG entrypoint="tail -f /dev/null"
+# Build args
 ARG goversion="1.7.4"
 ENV GO_BINARY go${goversion}.linux-amd64.tar.gz
 ARG repos="github.com"
@@ -171,6 +170,6 @@ RUN ln -s /usr/lib/systemd/system/nginx.service /etc/systemd/system/multi-user.t
 
 WORKDIR ${SRCDIR}
 
-ENTRYPOINT ${entrypoint}
+ENTRYPOINT ["tail", "-f", "/dev/null"]
 
 EXPOSE 80
